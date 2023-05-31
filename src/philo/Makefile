@@ -6,6 +6,12 @@ FLAGS					=				-Wall -Wextra -Werror
 
 all: $(NAME)
 
+v: all
+	valgrind -q --leak-check=full ./philo 4 300 100 100
+
+vh: all
+	valgrind -q --tool=helgrind ./philo 4 300 100 100
+
 $(OBJ): %.o: %.c $(HEADER)
 	$(CC) -g3 $(FLAGS) -c $< -o $@
 
