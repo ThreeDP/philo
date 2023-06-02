@@ -1,6 +1,6 @@
 NAME					=				philo
 HEADER					=				philo.h
-SRC						=				philo.c utils.c
+SRC						=				philo.c utils.c get_set.c
 OBJ						=				$(SRC:%.c=%.o)
 FLAGS					=				-Wall -Wextra -Werror
 
@@ -16,7 +16,7 @@ $(OBJ): %.o: %.c $(HEADER)
 	$(CC) -g3 $(FLAGS) -c $< -o $@
 
 $(NAME): $(OBJ) $(HEADER)
-	$(CC) -g3 $(FLAGS) $(OBJ) -o $(NAME)
+	$(CC) -g3 $(FLAGS) $(OBJ) -o $(NAME) -pthread
 
 clean:
 	rm -rf $(OBJ)
