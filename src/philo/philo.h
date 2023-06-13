@@ -6,7 +6,7 @@
 /*   By: dapaulin <dapaulin@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 21:11:40 by dapaulin          #+#    #+#             */
-/*   Updated: 2023/06/12 21:23:47 by dapaulin         ###   ########.fr       */
+/*   Updated: 2023/06/13 11:33:41 by dapaulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,16 @@
 typedef struct timeval	t_time;
 typedef pthread_mutex_t	t_mutex;
 
+typedef struct s_watch
+{
+	pthread_t	id;
+	
+	int			end;
+}				t_watch;
+
 typedef struct s_setting
 {
+	t_watch		jesus;
 	int			num_philos;
 	int			tm_die;
 	int			tm_eat;
@@ -44,7 +52,7 @@ typedef struct s_philo
 	long		amount_eat;
 	long		last_eat;
 	t_mutex		*left_fork;
-	t_mutex		*rigth_fork;
+	t_mutex		*right_fork;
 }				t_philo;
 
 typedef struct s_data
@@ -59,8 +67,12 @@ typedef struct s_data
 # define SLEEP_MSG "%ld %i is sleeping\n"
 # define FORK_MSG "%ld %i has taken a fork\n"
 
+// The creator
+void			*watching_life(void *s);
+
 // Utils
 long			tm_now(void);
+long			elapsed_time(void);
 void			printf_msg(char *msg, int id);
 void			lock_eat(t_philo *p);
 void			unlock_eat(t_philo *p);
@@ -73,6 +85,7 @@ void			he_is_not_the_judas(void);
 
 // GET FUNCTIONS
 long			*get_init_time(void);
+long			*get_time_now(void);
 t_philo			**get_philo(void);
 t_setting		**get_setting(void);
 

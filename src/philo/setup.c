@@ -6,7 +6,7 @@
 /*   By: dapaulin <dapaulin@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 19:44:12 by dapaulin          #+#    #+#             */
-/*   Updated: 2023/06/12 21:27:57 by dapaulin         ###   ########.fr       */
+/*   Updated: 2023/06/13 14:11:49 by dapaulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ t_setting	*start_setting(int ac, char **av)
 	pthread_mutex_init(&s->m_die, NULL);
 	pthread_mutex_init(&s->m_eat, NULL);
 	pthread_mutex_init(&s->m_sleep, NULL);
+	s->jesus.end = 0;
+	s->jesus.id = 0;
 	*get_setting() = s;
 	return (s);
 }
@@ -50,12 +52,12 @@ t_philo	*set_the_supper_table(int n_philos, t_mutex *forks)
 		p[i].name = i + 1;
 		if (i == n_philos - 1)
 		{
-			p[i].left_fork = &forks[i];
-			p[i].rigth_fork = &forks[0];
+			p[i].left_fork = &forks[0];
+			p[i].right_fork = &forks[i];
 			break ;
 		}
 		p[i].left_fork = &forks[i];
-		p[i].rigth_fork = &forks[i + 1];
+		p[i].right_fork = &forks[i + 1];
 		i++;
 	}
 	*get_philo() = p;
@@ -84,11 +86,13 @@ t_philo	*the_lords_supper(t_setting *s)
 
 	i = -1;
 	p = set_the_supper_table(s->num_philos, s->forks);
-	*get_init_time() = tm_now();
+	pthread_create(&s->jesus.id, NULL, &watching_life, s);
 	while (++i < s->num_philos)
 		pthread_create(&p[i].th_id, NULL, &bread_and_wine, &p[i]);
 	i = 0;
 	while (i < s->num_philos)
 		pthread_join(p[i++].th_id, NULL);
+	s->jesus.end = 1;
+	pthread_join(s->jesus.id, NULL);
 	return (p);
 }

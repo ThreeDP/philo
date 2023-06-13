@@ -6,13 +6,20 @@
 /*   By: dapaulin <dapaulin@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 21:17:25 by dapaulin          #+#    #+#             */
-/*   Updated: 2023/06/12 21:17:39 by dapaulin         ###   ########.fr       */
+/*   Updated: 2023/06/12 22:52:57 by dapaulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
 long	*get_init_time(void)
+{
+	static long	time;
+
+	return (&time);
+}
+
+long	*get_time_now(void)
 {
 	static long	time;
 

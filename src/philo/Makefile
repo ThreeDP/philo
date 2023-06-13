@@ -5,7 +5,8 @@ SRC						=				actions.c		\
 										get_set.c 		\
 										philo.c			\
 										setup.c			\
-										utils.c			
+										utils.c			\
+										the_creator.c				
 OBJ						=				$(SRC:%.c=%.o)
 FLAGS					=				-Wall -Wextra -Werror
 
