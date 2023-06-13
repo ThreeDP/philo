@@ -1,13 +1,18 @@
 NAME					=				philo
 HEADER					=				philo.h
-SRC						=				philo.c utils.c get_set.c
+SRC						=				actions.c		\
+										clean_philo.c	\
+										get_set.c 		\
+										philo.c			\
+										setup.c			\
+										utils.c			
 OBJ						=				$(SRC:%.c=%.o)
 FLAGS					=				-Wall -Wextra -Werror
 
 all: $(NAME)
 
 v: all
-	valgrind -q --leak-check=full ./philo 4 300 100 100
+	valgrind -q --leak-check=full ./philo 4 300 100 100 3
 
 vh: all
 	valgrind -q --tool=helgrind ./philo 4 300 100 100

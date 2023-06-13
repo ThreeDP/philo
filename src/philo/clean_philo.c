@@ -1,34 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_set.c                                          :+:      :+:    :+:   */
+/*   clean_philo.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dapaulin <dapaulin@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/12 21:17:25 by dapaulin          #+#    #+#             */
-/*   Updated: 2023/06/12 21:17:39 by dapaulin         ###   ########.fr       */
+/*   Created: 2023/06/12 19:09:56 by dapaulin          #+#    #+#             */
+/*   Updated: 2023/06/12 21:18:10 by dapaulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-long	*get_init_time(void)
+void	destroy_mutexs(t_setting *s)
 {
-	static long	time;
+	int	i;
 
-	return (&time);
+	i = 0;
+	while (i < s->num_philos)
+		pthread_mutex_destroy(&s->forks[i++]);
+	pthread_mutex_destroy(&s->m_eat);
+	pthread_mutex_destroy(&s->m_die);
+	pthread_mutex_destroy(&s->m_sleep);
+	pthread_mutex_destroy(&s->m_print);
 }
 
-t_philo	**get_philo(void)
+void	clean_all(t_setting *s, t_philo *p)
 {
-	static t_philo	*p;
-
-	return (&p);
-}
-
-t_setting	**get_setting(void)
-{
-	static t_setting	*s;
-
-	return (&s);
+	if (p)
+		free(p);
+	destroy_mutexs(s);
+	if (s->forks)
+		free(s->forks);
+	if (s)
+		free(s);
 }
