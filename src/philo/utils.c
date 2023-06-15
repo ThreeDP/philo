@@ -6,7 +6,7 @@
 /*   By: dapaulin <dapaulin@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 21:20:57 by dapaulin          #+#    #+#             */
-/*   Updated: 2023/06/13 14:06:05 by dapaulin         ###   ########.fr       */
+/*   Updated: 2023/06/14 20:08:37 by dapaulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,45 +20,49 @@ long	tm_now(void)
 	return (t.tv_sec * 1000 + t.tv_usec / 1000);
 }
 
-long	elapsed_time(void)
+long	elapsed_time(long time)
 {
 	t_time	t;
 
 	gettimeofday(&t, NULL);
-	return ((t.tv_sec * 1000 + t.tv_usec / 1000) - *get_init_time());
+	return ((t.tv_sec * 1000 + t.tv_usec / 1000) - time);
 }
 
-void	printf_msg(char *msg, int id)
+int	lock_eat(t_philo *p)
 {
-	pthread_mutex_lock(&(*get_setting())->m_print);
-	printf(msg, *get_time_now(), id);
-	pthread_mutex_unlock(&(*get_setting())->m_print);
-}
-
-void	lock_eat(t_philo *p)
-{
-	if (p->name % 2 == 0)
+	if (p->name % 2 == 0 || p->name == 5)
 	{
 		pthread_mutex_lock(p->left_fork);
 		pthread_mutex_lock(p->right_fork);
-		printf_msg(FORK_MSG, p->name);
-		printf_msg(FORK_MSG, p->name);
-		return ;
+		if (he_is_the_judas())
+		{
+			unlock_eat(p);
+			return (1);
+		}
+		pmsg(p, FORK_MSG);
+		pmsg(p, FORK_MSG);
+		return (0);
 	}
 	pthread_mutex_lock(p->right_fork);
 	pthread_mutex_lock(p->left_fork);
-	printf_msg(FORK_MSG, p->name);
-	printf_msg(FORK_MSG, p->name);
+	if (he_is_the_judas())
+	{
+		unlock_eat(p);
+		return (1);
+	}
+	pmsg(p, FORK_MSG);
+	pmsg(p, FORK_MSG);
+	return (0);
 }
 
 void	unlock_eat(t_philo *p)
 {
 	if (p->name % 2 == 0)
 	{
-		pthread_mutex_unlock(p->right_fork);
 		pthread_mutex_unlock(p->left_fork);
+		pthread_mutex_unlock(p->right_fork);
 		return ;
 	}
-	pthread_mutex_unlock(p->left_fork);
 	pthread_mutex_unlock(p->right_fork);
+	pthread_mutex_unlock(p->left_fork);
 }

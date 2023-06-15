@@ -6,7 +6,7 @@
 /*   By: dapaulin <dapaulin@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 19:09:56 by dapaulin          #+#    #+#             */
-/*   Updated: 2023/06/12 22:28:02 by dapaulin         ###   ########.fr       */
+/*   Updated: 2023/06/14 20:25:02 by dapaulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,17 @@ void	destroy_mutexs(t_setting *s)
 	while (i < s->num_philos)
 		pthread_mutex_destroy(&s->forks[i++]);
 	pthread_mutex_destroy(&s->m_eat);
-	pthread_mutex_destroy(&s->m_die);
-	pthread_mutex_destroy(&s->m_sleep);
+	pthread_mutex_destroy(&s->m_stop);
 	pthread_mutex_destroy(&s->m_print);
 }
 
 void	clean_all(t_setting *s, t_philo *p)
 {
+	int	i;
+
+	i = 0;
+	while (i < s->num_philos)
+		pthread_mutex_destroy(&p[i++].m_last_eat);
 	if (p)
 		free(p);
 	destroy_mutexs(s);

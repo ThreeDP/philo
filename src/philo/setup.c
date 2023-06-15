@@ -6,7 +6,7 @@
 /*   By: dapaulin <dapaulin@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 19:44:12 by dapaulin          #+#    #+#             */
-/*   Updated: 2023/06/13 14:11:49 by dapaulin         ###   ########.fr       */
+/*   Updated: 2023/06/14 20:48:19 by dapaulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,22 +19,26 @@ t_setting	*start_setting(int ac, char **av)
 
 	s = malloc(sizeof(t_setting));
 	memset(s, 0, sizeof(t_setting));
-	s->num_philos = atoi(av[1]);
-	s->tm_die = atoi(av[2]) * 1000;
-	s->tm_eat = atoi(av[3]) * 1000;
-	s->tm_sleep = atoi(av[4]) * 1000;
+	s->num_philos = ft_atol(av[1]);
+	s->tm_die = ft_atol(av[2]) * 1000;
+	s->tm_eat = ft_atol(av[3]) * 1000;
+	s->tm_sleep = ft_atol(av[4]) * 1000;
 	if (ac == 6)
-		s->num_tm_eat = atoi(av[5]);
+		s->num_tm_eat = ft_atol(av[5]);
+	else
+		s->num_tm_eat = -1;
 	s->forks = malloc(sizeof(t_mutex) * s->num_philos);
 	memset(s->forks, 0, sizeof(t_mutex) * s->num_philos);
 	i = 0;
 	while (i < s->num_philos)
 		pthread_mutex_init(&s->forks[i++], NULL);
-	pthread_mutex_init(&s->m_die, NULL);
 	pthread_mutex_init(&s->m_eat, NULL);
-	pthread_mutex_init(&s->m_sleep, NULL);
-	s->jesus.end = 0;
+	pthread_mutex_init(&s->m_stop, NULL);
+	pthread_mutex_init(&s->m_print, NULL);
+	s->jesus.stop = 0;
 	s->jesus.id = 0;
+	s->jesus.time_init = 0;
+	s->jesus.amount_eat = 0;
 	*get_setting() = s;
 	return (s);
 }
@@ -50,10 +54,11 @@ t_philo	*set_the_supper_table(int n_philos, t_mutex *forks)
 	while (i < n_philos)
 	{
 		p[i].name = i + 1;
+		pthread_mutex_init(&p[i].m_last_eat, NULL);
 		if (i == n_philos - 1)
 		{
-			p[i].left_fork = &forks[0];
-			p[i].right_fork = &forks[i];
+			p[i].left_fork = &forks[i];
+			p[i].right_fork = &forks[0];
 			break ;
 		}
 		p[i].left_fork = &forks[i];
@@ -64,35 +69,23 @@ t_philo	*set_the_supper_table(int n_philos, t_mutex *forks)
 	return (p);
 }
 
-// Run a thread.
-static void	*bread_and_wine(void *p)
+int	check_args(int ac, char **av)
 {
-	while (1)
+	int	i;
+	int	j;
+
+	i = 1;
+	j = 0;
+	if (ac == 6 && ft_atol(av[5]) < 0)
+		return (1);
+	while (i < ac)
 	{
-		start_eat(p);
-		if (((t_philo *)p)->amount_eat == (*get_setting())->num_tm_eat)
-			break ;
-		start_sleep(p);
-		start_think(p);
+		j = 0;
+		while (av[i][j] && (av[i][j] >= '0' && av[i][j] <= '9'))
+			j++;
+		if (av[i][j])
+			return (1);
+		i++;
 	}
-	return (NULL);
-}
-
-// Starts the philos dinner.
-t_philo	*the_lords_supper(t_setting *s)
-{
-	int		i;
-	t_philo	*p;
-
-	i = -1;
-	p = set_the_supper_table(s->num_philos, s->forks);
-	pthread_create(&s->jesus.id, NULL, &watching_life, s);
-	while (++i < s->num_philos)
-		pthread_create(&p[i].th_id, NULL, &bread_and_wine, &p[i]);
-	i = 0;
-	while (i < s->num_philos)
-		pthread_join(p[i++].th_id, NULL);
-	s->jesus.end = 1;
-	pthread_join(s->jesus.id, NULL);
-	return (p);
+	return (0);
 }

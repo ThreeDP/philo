@@ -6,36 +6,55 @@
 /*   By: dapaulin <dapaulin@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 21:13:21 by dapaulin          #+#    #+#             */
-/*   Updated: 2023/06/13 14:03:26 by dapaulin         ###   ########.fr       */
+/*   Updated: 2023/06/14 20:09:20 by dapaulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	start_eat(t_philo *p)
+int	start_eat(t_philo *p)
 {
-	lock_eat(p);
-	printf_msg(EAT_MSG, p->name);
-	p->amount_eat++;
+	if (lock_eat(p))
+		return (1);
+	pthread_mutex_lock(&p->m_last_eat);
+	p->last_eat = elapsed_time(p->init_time);
+	pthread_mutex_unlock(&p->m_last_eat);
+	pmsg(p, EAT_MSG);
 	usleep((*get_setting())->tm_eat);
 	unlock_eat(p);
+	pthread_mutex_lock(&p->m_last_eat);
+	p->amount_eat++;
+	pthread_mutex_unlock(&p->m_last_eat);
+	return (0);
 }
 
-void	start_sleep(t_philo *p)
+int	start_sleep(t_philo *p)
 {
-	//pthread_mutex_lock(&(*get_setting())->m_sleep);
-	printf_msg(SLEEP_MSG, p->name);
+	if (he_is_the_judas())
+		return (1);
+	pmsg(p, SLEEP_MSG);
+	p->state = 0;
 	usleep((*get_setting())->tm_sleep);
-	//pthread_mutex_unlock(&(*get_setting())->m_sleep);
+	return (0);
 }
 
-void	start_think(t_philo *p)
+int	start_think(t_philo *p)
 {
-	printf_msg(THINK_MSG, p->name);
+	if (he_is_the_judas())
+		return (1);
+	pmsg(p, THINK_MSG);
+	return (0);
 }
 
 // Find a death philo.
-void	he_is_not_the_judas(void)
+int	he_is_the_judas(void)
 {
-	printf(DIE_MSG, tm_now() - *get_init_time(), (*get_philo())->name);
+	pthread_mutex_lock(&(*get_setting())->m_stop);
+	if ((*get_setting())->jesus.stop)
+	{
+		pthread_mutex_unlock(&(*get_setting())->m_stop);
+		return (1);
+	}
+	pthread_mutex_unlock(&(*get_setting())->m_stop);
+	return (0);
 }

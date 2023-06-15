@@ -6,7 +6,7 @@
 /*   By: dapaulin <dapaulin@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 21:11:40 by dapaulin          #+#    #+#             */
-/*   Updated: 2023/06/13 11:33:41 by dapaulin         ###   ########.fr       */
+/*   Updated: 2023/06/14 20:59:09 by dapaulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,22 +26,22 @@ typedef pthread_mutex_t	t_mutex;
 typedef struct s_watch
 {
 	pthread_t	id;
-	
-	int			end;
+	int			amount_eat;
+	int			stop;
+	long		time_init;
 }				t_watch;
 
 typedef struct s_setting
 {
-	t_watch		jesus;
 	int			num_philos;
 	int			tm_die;
 	int			tm_eat;
 	int			tm_sleep;
 	int			num_tm_eat;
+	t_watch		jesus;
 	t_mutex		*forks;
 	t_mutex		m_eat;
-	t_mutex		m_sleep;
-	t_mutex		m_die;
+	t_mutex		m_stop;
 	t_mutex		m_print;
 }				t_setting;
 
@@ -51,6 +51,9 @@ typedef struct s_philo
 	int			name;
 	long		amount_eat;
 	long		last_eat;
+	int			state;
+	long		init_time;
+	t_mutex		m_last_eat;
 	t_mutex		*left_fork;
 	t_mutex		*right_fork;
 }				t_philo;
@@ -61,40 +64,47 @@ typedef struct s_data
 	long		tm_now;
 }				t_data;
 
-# define DIE_MSG "%ld %i died\n"
-# define EAT_MSG "%ld %i is eating\n"
-# define THINK_MSG "%ld %i is thinking\n"
-# define SLEEP_MSG "%ld %i is sleeping\n"
-# define FORK_MSG "%ld %i has taken a fork\n"
+# define DIE_MSG "%ld %i 💀\033[1;31m died\033[0m\n"
+# define EAT_MSG "%ld %i 🍽️ \033[1;32m is eating\033[0m\n"
+# define THINK_MSG "%ld %i 🤔\033[1;34m is thinking\033[0m\n"
+# define SLEEP_MSG "%ld %i 😴\033[1;35m is sleeping\033[0m\n"
+# define FORK_MSG "%ld %i 🍴\033[1;33m has taken a fork\033[0m\n"
+
+long		ft_atol(const char *nptr);
+
+// SETUP Functions
+t_setting	*start_setting(int ac, char **av);
+t_philo		*set_the_supper_table(int n_philos, t_mutex *forks);
+int			check_args(int ac, char **av);
 
 // The creator
-void			*watching_life(void *s);
-
-// Utils
-long			tm_now(void);
-long			elapsed_time(void);
-void			printf_msg(char *msg, int id);
-void			lock_eat(t_philo *p);
-void			unlock_eat(t_philo *p);
+t_philo		*the_lords_supper(t_setting *s);
+void		*watching_life(void *s);
 
 // Actions Functions
-void			start_eat(t_philo *p);
-void			start_sleep(t_philo *p);
-void			start_think(t_philo *p);
-void			he_is_not_the_judas(void);
+int			start_eat(t_philo *p);
+int			start_sleep(t_philo *p);
+int			start_think(t_philo *p);
+int			he_is_the_judas(void);
 
-// GET FUNCTIONS
-long			*get_init_time(void);
-long			*get_time_now(void);
-t_philo			**get_philo(void);
-t_setting		**get_setting(void);
+// Print Functions
+void		pmsg(t_philo *p, char *msg);
+void		pmsg_die(t_philo *p, char *msg);
 
 // CLEAN PHILO
-void			destroy_mutexs(t_setting *s);
-void			clean_all(t_setting *s, t_philo *p);
+void		destroy_mutexs(t_setting *s);
+void		clean_all(t_setting *s, t_philo *p);
 
-// Setup Functions
-t_setting		*start_setting(int ac, char **av);
-t_philo			*set_the_supper_table(int n_philos, t_mutex *forks);
-t_philo			*the_lords_supper(t_setting *s);
+// Utils
+long		tm_now(void);
+long		elapsed_time(long time);
+int			lock_eat(t_philo *p);
+void		unlock_eat(t_philo *p);
+
+// GET FUNCTIONS
+long		*get_init_time(void);
+long		*get_time_now(void);
+t_philo		**get_philo(void);
+t_setting	**get_setting(void);
+
 #endif
