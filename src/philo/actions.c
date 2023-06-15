@@ -6,7 +6,7 @@
 /*   By: dapaulin <dapaulin@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 21:13:21 by dapaulin          #+#    #+#             */
-/*   Updated: 2023/06/14 20:09:20 by dapaulin         ###   ########.fr       */
+/*   Updated: 2023/06/15 15:56:17 by dapaulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@ int	start_eat(t_philo *p)
 {
 	if (lock_eat(p))
 		return (1);
+	pmsg(p, EAT_MSG);
 	pthread_mutex_lock(&p->m_last_eat);
 	p->last_eat = elapsed_time(p->init_time);
 	pthread_mutex_unlock(&p->m_last_eat);
-	pmsg(p, EAT_MSG);
 	usleep((*get_setting())->tm_eat);
 	unlock_eat(p);
 	pthread_mutex_lock(&p->m_last_eat);
@@ -30,11 +30,15 @@ int	start_eat(t_philo *p)
 
 int	start_sleep(t_philo *p)
 {
+	int	time;
+
 	if (he_is_the_judas())
 		return (1);
 	pmsg(p, SLEEP_MSG);
 	p->state = 0;
-	usleep((*get_setting())->tm_sleep);
+	time = elapsed_time(p->init_time) + ((*get_setting())->tm_sleep / 1000);
+	while (elapsed_time(p->init_time) <= time)
+		usleep(10);
 	return (0);
 }
 

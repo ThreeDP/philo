@@ -6,7 +6,7 @@
 /*   By: dapaulin <dapaulin@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 21:11:40 by dapaulin          #+#    #+#             */
-/*   Updated: 2023/06/14 20:59:09 by dapaulin         ###   ########.fr       */
+/*   Updated: 2023/06/15 14:33:45 by dapaulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ typedef struct s_philo
 {
 	pthread_t	th_id;
 	int			name;
+	int			wine;
 	long		amount_eat;
 	long		last_eat;
 	int			state;
@@ -64,11 +65,17 @@ typedef struct s_data
 	long		tm_now;
 }				t_data;
 
-# define DIE_MSG "%ld %i 💀\033[1;31m died\033[0m\n"
-# define EAT_MSG "%ld %i 🍽️ \033[1;32m is eating\033[0m\n"
-# define THINK_MSG "%ld %i 🤔\033[1;34m is thinking\033[0m\n"
-# define SLEEP_MSG "%ld %i 😴\033[1;35m is sleeping\033[0m\n"
-# define FORK_MSG "%ld %i 🍴\033[1;33m has taken a fork\033[0m\n"
+# define DIE_MSG "%ld %i died\n"
+# define EAT_MSG "%ld %i is eating\n"
+# define THINK_MSG "%ld %i is thinking\n"
+# define SLEEP_MSG "%ld %i is sleeping\n"
+# define FORK_MSG "%ld %i has taken a fork\n"
+
+// # define DIE_MSG "%ld %i 💀\033[1;31m died\033[0m\n"
+// # define EAT_MSG "%ld %i 🍽️ \033[1;32m is eating\033[0m\n"
+// # define THINK_MSG "%ld %i 🤔\033[1;34m is thinking\033[0m\n"
+// # define SLEEP_MSG "%ld %i 😴\033[1;35m is sleeping\033[0m\n"
+// # define FORK_MSG "%ld %i 🍴\033[1;33m has taken a fork\033[0m\n"
 
 long		ft_atol(const char *nptr);
 
@@ -106,5 +113,12 @@ long		*get_init_time(void);
 long		*get_time_now(void);
 t_philo		**get_philo(void);
 t_setting	**get_setting(void);
+
+// CREATOR UTILS
+void		*sad_man(void *p);
+int			one_philo(t_setting *s, t_philo *p);
+int			end_the_supper(t_setting *s, long amount_eat);
+void		count_meals(t_setting *s, t_philo *disciple, long amount_eat);
+int			disciple_is_dead(t_setting *s, t_philo *p, long time_die);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: dapaulin <dapaulin@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 21:20:57 by dapaulin          #+#    #+#             */
-/*   Updated: 2023/06/14 20:08:37 by dapaulin         ###   ########.fr       */
+/*   Updated: 2023/06/15 13:56:43 by dapaulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ long	elapsed_time(long time)
 
 int	lock_eat(t_philo *p)
 {
-	if (p->name % 2 == 0 || p->name == 5)
+	if (p->name % 2 == 0)
 	{
 		pthread_mutex_lock(p->left_fork);
 		pthread_mutex_lock(p->right_fork);

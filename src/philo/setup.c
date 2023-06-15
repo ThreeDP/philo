@@ -6,7 +6,7 @@
 /*   By: dapaulin <dapaulin@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 19:44:12 by dapaulin          #+#    #+#             */
-/*   Updated: 2023/06/14 20:48:19 by dapaulin         ###   ########.fr       */
+/*   Updated: 2023/06/15 15:05:55 by dapaulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,7 @@ t_setting	*start_setting(int ac, char **av)
 	pthread_mutex_init(&s->m_eat, NULL);
 	pthread_mutex_init(&s->m_stop, NULL);
 	pthread_mutex_init(&s->m_print, NULL);
-	s->jesus.stop = 0;
-	s->jesus.id = 0;
-	s->jesus.time_init = 0;
-	s->jesus.amount_eat = 0;
+	s->jesus = (t_watch){0};
 	*get_setting() = s;
 	return (s);
 }
@@ -54,6 +51,7 @@ t_philo	*set_the_supper_table(int n_philos, t_mutex *forks)
 	while (i < n_philos)
 	{
 		p[i].name = i + 1;
+		p[i].wine = 0;
 		pthread_mutex_init(&p[i].m_last_eat, NULL);
 		if (i == n_philos - 1)
 		{
@@ -76,6 +74,8 @@ int	check_args(int ac, char **av)
 
 	i = 1;
 	j = 0;
+	if (ft_atol(av[1]) <= 0)
+		return (1);
 	if (ac == 6 && ft_atol(av[5]) < 0)
 		return (1);
 	while (i < ac)

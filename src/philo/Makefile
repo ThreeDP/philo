@@ -8,6 +8,7 @@ SRC						=				actions.c		\
 										setup.c			\
 										utils.c			\
 										the_creator.c	\
+										creator_utils.c	\
 										print_functions.c			
 OBJ						=				$(SRC:%.c=%.o)
 FLAGS					=				-Wall -Wextra -Werror

@@ -6,7 +6,7 @@
 /*   By: dapaulin <dapaulin@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 21:19:41 by dapaulin          #+#    #+#             */
-/*   Updated: 2023/06/14 20:48:55 by dapaulin         ###   ########.fr       */
+/*   Updated: 2023/06/14 22:51:46 by dapaulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	main(int ac, char **av)
 	t_philo		*p;
 
 	s = NULL;
-	if (ac == 6 && !ft_atol(av[5]))
+	if ((ac == 6 && !ft_atol(av[5])))
 		return (0);
 	if (ac >= 5 && ac <= 6 && !check_args(ac, av))
 	{
