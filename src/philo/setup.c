@@ -6,7 +6,7 @@
 /*   By: dapaulin <dapaulin@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 19:44:12 by dapaulin          #+#    #+#             */
-/*   Updated: 2023/06/15 15:05:55 by dapaulin         ###   ########.fr       */
+/*   Updated: 2023/06/15 17:45:39 by dapaulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ t_philo	*set_the_supper_table(int n_philos, t_mutex *forks)
 		p[i].name = i + 1;
 		p[i].wine = 0;
 		pthread_mutex_init(&p[i].m_last_eat, NULL);
+		pthread_mutex_init(&p[i].m_amount_eat, NULL);
 		if (i == n_philos - 1)
 		{
 			p[i].left_fork = &forks[i];

@@ -6,7 +6,7 @@
 /*   By: dapaulin <dapaulin@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 21:11:40 by dapaulin          #+#    #+#             */
-/*   Updated: 2023/06/15 14:33:45 by dapaulin         ###   ########.fr       */
+/*   Updated: 2023/06/15 17:45:01 by dapaulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ typedef struct s_philo
 	int			state;
 	long		init_time;
 	t_mutex		m_last_eat;
+	t_mutex		m_amount_eat;
 	t_mutex		*left_fork;
 	t_mutex		*right_fork;
 }				t_philo;

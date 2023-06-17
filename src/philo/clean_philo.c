@@ -6,7 +6,7 @@
 /*   By: dapaulin <dapaulin@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 19:09:56 by dapaulin          #+#    #+#             */
-/*   Updated: 2023/06/14 20:25:02 by dapaulin         ###   ########.fr       */
+/*   Updated: 2023/06/15 17:46:07 by dapaulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,10 @@ void	clean_all(t_setting *s, t_philo *p)
 
 	i = 0;
 	while (i < s->num_philos)
-		pthread_mutex_destroy(&p[i++].m_last_eat);
+	{
+		pthread_mutex_destroy(&p[i].m_last_eat);
+		pthread_mutex_destroy(&p[i++].m_amount_eat);
+	}
 	if (p)
 		free(p);
 	destroy_mutexs(s);

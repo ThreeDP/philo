@@ -6,7 +6,7 @@
 /*   By: dapaulin <dapaulin@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 21:57:55 by dapaulin          #+#    #+#             */
-/*   Updated: 2023/06/15 15:57:01 by dapaulin         ###   ########.fr       */
+/*   Updated: 2023/06/17 15:00:45 by dapaulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,17 @@ static void	*bread_and_wine(void *philo)
 
 	p = (t_philo *)philo;
 	if (p->name % 2 != 0)
-	{
-		start_think(p);
-		usleep(1000);
-	}
+		usleep(5000);
 	while (1)
 	{
+		if (start_think(p))
+			break ;
 		if (start_eat(p))
 			break ;
 		if (start_sleep(p))
 			break ;
-		if (start_think(p))
-			break ;
+		if (p->name % 2 == 0)
+			usleep(2000);
 	}
 	return (NULL);
 }
@@ -60,6 +59,26 @@ t_philo	*the_lords_supper(t_setting *s)
 	return (p);
 }
 
+int	eyes_of_god(t_setting *s, t_philo *p, int num_tm_eat, int num_philos)
+{
+	int	i;
+
+	i = 0;
+	while (i < num_philos)
+	{
+		if (num_tm_eat >= 0)
+		{
+			count_meals(s, &p[i], num_tm_eat);
+			if (end_the_supper(s, num_philos))
+				return (1);
+		}
+		if (disciple_is_dead(s, &p[i], s->tm_die))
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
 void	*watching_life(void *set)
 {
 	int			i;
@@ -75,19 +94,8 @@ void	*watching_life(void *set)
 	num_philos = s->num_philos;
 	while (1)
 	{
-		i = 0;
-		while (i < num_philos)
-		{
-			count_meals(s, &p[i], num_tm_eat);
-			if (num_tm_eat >= 0)
-			{
-				if (end_the_supper(s, num_philos))
-					return (NULL);
-				if (disciple_is_dead(s, &p[i], s->tm_die))
-					return (NULL);
-			}
-			i++;
-		}
+		if (eyes_of_god(s, p, num_tm_eat, num_philos))
+			return (NULL);
 		usleep(5000);
 	}
 	return (NULL);
