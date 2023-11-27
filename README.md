@@ -1,1 +1,2 @@
 # philo
+> No projeto Philosophers da escola 42, os alunos enfrentam o desafio de implementar o clássico problema de jantar dos filósofos usando threads e semáforos. Eles exploram conceitos como sincronização, exclusão mútua e deadlock para garantir que os filósofos compartilhem os recursos (garfos) corretamente. O objetivo é criar uma solução eficiente e livre de impasses, permitindo que os filósofos jantem de maneira harmoniosa. É uma oportunidade para desenvolver habilidades em programação concorrente e solução de problemas complexos.
